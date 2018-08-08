@@ -6,10 +6,6 @@ set -o errexit -o noclobber
 hue="-level 0%,100%,0.6"
 effect="-filter Gaussian -resize 20% -define filter:sigma=1.5 -resize 500.5%"
 
-# default system sans-serif font
-font_name="$(fc-match sans -f "%{family}\n")"
-font=$( convert -list font | sed -n "/^ *Font: /{s/.* //;x};/^ *family: $font_name/{x;p;q}")
-
 image=$(mktemp --suffix=.png)
 shot="import -window root"
 desktop=""
@@ -79,11 +75,14 @@ while true ; do
         -f|--font)
             case "$2" in
                 "") shift 2 ;;
-                *) font=$2 ; shift 2 ;;
+                *) font=$2 ; font_custom=true ; shift 2 ;;
             esac ;;
         -t|--text) text=$2 ; shift 2 ;;
         -l|--listfonts)
-	    convert -list font | awk -F: '/Font: / { print $2 }' | sort -du | command -- ${PAGER:-less}
+	    convert -list font \
+            | awk -F: '/Font: / { print $2 }' \
+            | sort -du \
+            | command -- ${PAGER:-less}
 	    exit 0 ;;
 	-n|--nofork) i3lock_cmd+=" --nofork" ; shift ;;
         -u|--nounlockindicator) i3lock_cmd+=" -u" ; shift ;;
@@ -91,6 +90,13 @@ while true ; do
         *) echo "error" ; exit 1 ;;
     esac
 done
+
+if [ -z "$font_custom" ] ; then
+    # Use default system sans-serif font
+    font_name="$(fc-match sans -f "%{family}\n")"
+    font=$( convert -list font \
+            | sed -n "/^ *Font: /{s/.* //;x};/^ *family: $font_name/{x;p;q}")
+fi
 
 if [ -n "$shot" ] ; then
     if "$shot_custom" && [ $# -gt 0 ]; then
