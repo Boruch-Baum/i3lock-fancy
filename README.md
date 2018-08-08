@@ -12,6 +12,7 @@ requests pending):
 * Rename and update man page
 * Improved MakeFile, correctly handles man page and icons
 * Minor speed tweaks
+* Converted to (faster and POSIX-compliant) sh from bash
 
 
 Original readme begins here (but edited)
