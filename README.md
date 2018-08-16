@@ -57,7 +57,7 @@ Then change to the directory and run make.
   and update your configurations. The new change simplifies a lot of
   things so updates will be easier in the future.**
 
-The following distro's have packages you can use to install:
+### The following distro's have packages you can use to install:
 * Arch Linux: https://aur.archlinux.org/packages/i3lock-fancy-git/
 * GNU Guix: Run `guix package --install i3lock-fancy`
 * Debian: https://packages.debian.org/sid/i3lock-fancy
@@ -137,14 +137,16 @@ Static image
 ------------
 
 If you would like to run this script with a static image `lock.png`,
-run `convert` directly only once, specifying the result `newimage.png` to
-option -i:
+run `convert` from the ImageMagick package directly only once,
+specifying the result `newimage.png` to `i3lock -i` (ie. use option `-i`):
 
 ```
-convert /path/to/background.png -font Liberation-Sans \
+# Add a lock icon and text to the center of an image
+$ convert /path/to/background.png -font Liberation-Sans \
     -pointsize 26 -fill white -gravity center \
     -annotate +0+160 "Type Password to Unlock" lock.png \
     -gravity center -composite newimage.png
 
+#!/bin/sh
 i3lock-fancy -i newimage.png
 ```
